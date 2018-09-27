@@ -80,8 +80,8 @@ class BookSearch extends Component {
           <ol className="books-grid">
 
           {/* Display the searchResults books using a map; update the books' shelves accordingly */}
-          {this.state.query.length > 0 ? (
-            this.state.searchResults.map((books, key) => <Books updateBookShelf= {this.updateBookShelf} books={books} key={books.id} />)
+          {this.state.searchResults.length > 0 ? (
+            this.state.searchResults.map((books) => <Books updateBookShelf= {this.updateBookShelf} books={books} key={books.id} />)
           ) : (
             <div>Search for books above!</div>
           )}
