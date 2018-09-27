@@ -71,6 +71,7 @@ class BookSearch extends Component {
         <div className="search-books-bar">
           <Link to ="/" className="close-search" >Close</Link>
             <div className="search-books-input-wrapper">
+
               {/* Set the value of the seach bar to query and call the searchBooks method when it changes */}
               <input type="text" placeholder="Search by title or author" value = {this.state.query}
               onChange = {this.updateQuery}/>
@@ -78,8 +79,9 @@ class BookSearch extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
+
           {/* Display the searchResults books using a map; update the books' shelves accordingly */}
-          {this.state.searchResults.length > 0 && this.state.searchResults.map((books, key) => <Books updateBookShelf= {this.updateBookShelf} books={books} key={key} />)}
+          {this.state.searchResults.length > 0 && this.state.searchResults.map((books, key) => <Books updateBookShelf= {this.updateBookShelf} books={books} key={books.id} />)}
           </ol>
         </div>
       </div>
