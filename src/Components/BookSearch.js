@@ -36,33 +36,30 @@ class BookSearch extends Component {
 
   // Per the requirements, no books should render when the search bar is cleared
   // update Query is called everytime the seach bar changes, and it calls searchBooks
-  updateQuery = (event) => {
-    this.setState({query: event.target.value}, this.searchBooks);
-  }
+  updateQuery = (value) => {
+    console.log('searching...')
+    this.setState({
+      query: value
+    });
 
-  // Method called to search through all books for those that match the seach terms
-  searchBooks() {
-    console.log(this.state.query);
-   if (this.state.query.trim() === "") {
-       return this.setState({searchResults: [] });
+    if (value === '') {
+      this.setState({
+        searchResults: []
+      });
+      return;
     }
 
-    // call the BooksAPI search method
-    BooksAPI.search(this.state.query.trim()).then(retval => {
-      if(retval.error){
-        return this.setState({searchResults: [] });
-      }
-      else {
-        // match the shelves of the queried books to the ones one our shelves
-        retval.forEach (searchedBook => {
-          let bookFound = this.state.books.filter(bookList => bookList.id === searchedBook.id);
-          if(bookFound[0]) {
-            searchedBook.shelf = bookFound[0].shelf;
-          }
-        })
-        return this.setState({ searchResults: retval})
-      }
-    });
+    BooksAPI.search(value)
+      .then((results) => {
+        console.log(results);
+        results.length === 0 ? this.setState({ searchResults: [] }) : this.setState({ searchResults: results });
+      });
+  }
+
+  handleChange = (e) => {
+    const value = e.target.value
+    this.setState({ query: value });
+    this.updateQuery(value);
   }
 
   render () {
@@ -73,15 +70,21 @@ class BookSearch extends Component {
             <div className="search-books-input-wrapper">
 
               {/* Set the value of the seach bar to query and call the searchBooks method when it changes */}
-              <input type="text" placeholder="Search by title or author" value = {this.state.query}
-              onChange = {this.updateQuery}/>
+              <input type="text" 
+                     placeholder="Search by title or author" 
+                     value = {this.state.query}
+                     onChange = {this.handleChange}/>
             </div>
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
 
           {/* Display the searchResults books using a map; update the books' shelves accordingly */}
-          {this.state.searchResults.length > 0 && this.state.searchResults.map((books, key) => <Books updateBookShelf= {this.updateBookShelf} books={books} key={books.id} />)}
+          {this.state.query.length > 0 ? (
+            this.state.searchResults.map((books, key) => <Books updateBookShelf= {this.updateBookShelf} books={books} key={books.id} />)
+          ) : (
+            <div>Search for books above!</div>
+          )}
           </ol>
         </div>
       </div>
